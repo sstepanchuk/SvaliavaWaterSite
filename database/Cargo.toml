@@ -1,0 +1,39 @@
+[package]
+name = "database"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Локальні залежності
+shared = { path = "../shared" }
+
+# База даних та ORM
+sqlx = { version = "0.8.3", features = [
+    "sqlite",
+    "runtime-tokio-native-tls",
+    "chrono",
+    "json",
+    "migrate"
+] }
+
+# Асинхронність
+tokio = { version = "1.0", features = ["full"] }
+async-trait = "0.1"
+
+# Логування та трейсинг
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Обробка помилок
+thiserror = "2.0.11"
+anyhow = "1.0"
+
+# Серіалізація/Десеріалізація
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Утиліти для роботи з часом
+chrono = { version = "0.4", features = ["serde"] }
+
+# Утиліти для роботи з UUID
+uuid = { version = "1.0", features = ["v4", "serde"] }

@@ -1,0 +1,10 @@
+[workspace]
+members = [
+    "api_endpoint_core",
+    "api_endpoint_derive",
+    "shared",
+    "database",
+    "backend",
+    "frontend"
+]
+resolver = "2"
