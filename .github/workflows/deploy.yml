@@ -87,10 +87,10 @@ jobs:
       
       - name: Run new container
         run: |
-          if [ "${{ github.ref_name }}" == "master" ]; then
-            PORT=8443
+          if [ "${{ github.ref_name }}" == "main" ]; then
+            PORT=80
           else
-            PORT=88
+            PORT=8080
           fi
           result=$( docker run -p ${PORT}:8080 --add-host=host.docker.internal:host-gateway -v /dev/shm:/dev/shm --env-file ${{ env.ENV_FILE }} -i --restart unless-stopped --name ${{ needs.state.outputs.CONTAINER_NAME }}-new -d ${{ needs.push_to_registry.outputs.NEW_IMAGE_ID }} )
           echo "NEW_CONTAINER_ID=${result}" >> $GITHUB_ENV 
