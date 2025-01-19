@@ -1,0 +1,49 @@
+nav {
+  .desktop {
+    a {
+      color: #ffffff; /* text-white */
+      border-bottom: 2px solid transparent; /* border-b-2 */
+      font-weight: 500; /* font-medium */
+      padding: 0.5rem 0.25rem; /* px-1 py-2 */
+
+      &[aria-current] {
+        border-color: #ffffff; /* border-white */
+      }
+
+      &:not([aria-current]) {
+        color: rgba(255, 255, 255, 0.8); /* text-white/80 */
+        border-color: transparent; /* border-transparent */
+        transition: all 0.2s; /* transition-all duration-200 */
+
+        &:hover {
+          color: #ffffff; /* hover:text-white */
+          border-color: rgba(255, 255, 255, 0.3); /* hover:border-white/30 */
+        }
+      }
+    }
+  }
+
+  .mobile {
+    a {
+      color: #ffffff; /* text-white */
+      border-left: 4px solid transparent; /* border-l-4 */
+      padding-left: 1rem; /* pl-4 */
+
+      &[aria-current] {
+        font-weight: 500; /* font-medium */
+        border-color: #ffffff; /* border-white */
+      }
+
+      &:not([aria-current]) {
+        color: rgba(255, 255, 255, 0.8); /* text-white/80 */
+        border-color: transparent; /* border-transparent */
+        transition: all 0.2s; /* transition-all duration-200 */
+
+        &:hover {
+          color: #ffffff; /* hover:text-white */
+          border-color: rgba(255, 255, 255, 0.3); /* hover:border-white/30 */
+        }
+      }
+    }
+  }
+}
