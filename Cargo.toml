@@ -95,5 +95,3 @@ lib-features = []
 #
 # Optional. Defaults to false.
 lib-default-features = false
-
-lib-profile-release = "wasm-release"
