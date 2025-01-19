@@ -19,9 +19,9 @@ pub fn App() -> impl IntoView {
             <navbar::Comp/>
             <main>
                 <Routes fallback=|| "Page not found.".into_view()>
-                    <Route path=path!("/main") view=home::Comp/>
-                    <Route path=path!("/news") view=home::Comp/>
-                    <Route path=path!("/contacts") view=home::Comp/>
+                    <Route path=path!("/main") view=main::Comp/>
+                    <Route path=path!("/news") view=main::Comp/>
+                    <Route path=path!("/contacts") view=main::Comp/>
                     <Route path=path!("/") view=|| view! { <Redirect path="/main"/> }/>
                 </Routes>
             </main>
