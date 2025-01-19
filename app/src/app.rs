@@ -25,6 +25,7 @@ pub fn App() -> impl IntoView {
                     <Route path=path!("/") view=|| view! { <Redirect path="/main"/> }/>
                 </Routes>
             </main>
+            <footer::Comp/>
         </Router>
     }
 }

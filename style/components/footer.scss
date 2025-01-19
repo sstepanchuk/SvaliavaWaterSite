@@ -1,0 +1,11 @@
+footer {
+  .links {
+    a {
+      transition: color 0.2s ease; /* Add a smooth transition for color change */
+
+      &:hover {
+        color: #93c5fd; /* This is the color equivalent of 'blue-300' in Tailwind */
+      }
+    }
+  }
+}
