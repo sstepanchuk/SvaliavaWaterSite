@@ -34,7 +34,7 @@ pub fn Comp() -> impl IntoView {
                 </div>
                 <hr class="my-8 border-gray-700" />
                 <div class="text-center">
-                    <p>"&copy; 2025 КП 'Водопостачання та водовідведення'. Всі права захищені."</p>
+                    <p>"© 2025 КП 'Водопостачання та водовідведення'. Всі права захищені."</p>
                 </div>
             </div>
         </footer>

@@ -27,7 +27,7 @@ pub fn Comp() -> impl IntoView {
                                 </p>
                             </div>
                             <div>
-                                <img src="/api/placeholder/600/400" alt="Про компанію" class="rounded-lg shadow-lg w-full" />
+                                <img src="/images/mock_main/image.png" alt="Про компанію" class="rounded-lg shadow-lg w-full" />
                             </div>
                         </div>
                     </div>
@@ -69,7 +69,7 @@ pub fn Comp() -> impl IntoView {
                         <h2 class="text-3xl font-bold text-center mb-12">"Останні новини"</h2>
                         <div class="grid md:grid-cols-3 gap-8">
                             <div class="bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 hover:-translate-y-1">
-                                <img src="/api/placeholder/400/300" alt="Новина 1" class="w-full h-48 object-cover" />
+                                <img src="/images/mock_main/news/1.png" alt="Новина 1" class="w-full h-48 object-cover" />
                                 <div class="p-6">
                                     <h3 class="text-xl font-bold mb-2">"Планові ремонтні роботи"</h3>
                                     <p class="text-gray-600 mb-4">"У зв'язку з плановими ремонтними роботами можливе тимчасове припинення водопостачання..."</p>
@@ -78,7 +78,7 @@ pub fn Comp() -> impl IntoView {
                             </div>
 
                             <div class="bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 hover:-translate-y-1">
-                                <img src="/api/placeholder/400/300" alt="Новина 2" class="w-full h-48 object-cover" />
+                                <img src="/images/mock_main/news/2.png" alt="Новина 2" class="w-full h-48 object-cover" />
                                 <div class="p-6">
                                     <h3 class="text-xl font-bold mb-2">"Модернізація обладнання"</h3>
                                     <p class="text-gray-600 mb-4">"Встановлено нове сучасне обладнання для покращення якості води..."</p>
@@ -87,7 +87,7 @@ pub fn Comp() -> impl IntoView {
                             </div>
 
                             <div class="bg-white rounded-lg shadow-lg overflow-hidden transition duration-300 hover:-translate-y-1">
-                                <img src="/api/placeholder/400/300" alt="Новина 3" class="w-full h-48 object-cover" />
+                                <img src="/images/mock_main/news/3.png" alt="Новина 3" class="w-full h-48 object-cover" />
                                 <div class="p-6">
                                     <h3 class="text-xl font-bold mb-2">"Акція для споживачів"</h3>
                                     <p class="text-gray-600 mb-4">"Знижки на встановлення лічильників води для пенсіонерів..."</p>
