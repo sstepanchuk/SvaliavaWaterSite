@@ -1,20 +1,19 @@
 use leptos::prelude::*;
+use crate::components::hero;
+use leptos_meta::Title;
 
 #[component]
 pub fn Comp() -> impl IntoView {
     view! {
-        <div>
-            <div class="relative bg-gray-900 text-white py-24">
-                <div class="absolute inset-0">
-                    <img src="/images/main.jpeg" alt="Background" class="w-full h-full object-cover opacity-50" />
-                </div>
-                <div class="relative container mx-auto px-4 text-center">
-                    <h1 class="text-4xl md:text-5xl font-bold mb-4">"КП \"Водопостачання та водовідведення\""</h1>
-                    <p class="text-xl md:text-2xl">"Забезпечуємо якісне водопостачання та водовідведення для комфорту наших клієнтів"</p>
-                </div>
-            </div>
+        <>
+            <Title text="КП \"Водопостачання та водовідведення\""/>
 
-            <main class="flex-grow">
+            <hero::Comp background_url="/images/main.jpeg".to_string()>
+                <h1 class="text-4xl md:text-5xl font-bold mb-4">"КП \"Водопостачання та водовідведення\""</h1>
+                <p class="text-xl md:text-2xl">"Забезпечуємо якісне водопостачання та водовідведення для комфорту наших клієнтів"</p>
+            </hero::Comp>
+
+            <main class="container mx-auto px-4 py-12">
                 <section class="py-16 bg-white">
                     <div class="container mx-auto px-4">
                         <h2 class="text-3xl font-bold text-center mb-12">"Про нашу компанію"</h2>
@@ -98,6 +97,6 @@ pub fn Comp() -> impl IntoView {
                     </div>
                 </section>
             </main>
-        </div>
+        </>
     }
 }
