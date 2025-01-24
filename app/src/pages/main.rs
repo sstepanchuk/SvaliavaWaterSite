@@ -13,7 +13,7 @@ pub fn Comp() -> impl IntoView {
                 <p class="text-xl md:text-2xl">"Забезпечуємо якісне водопостачання та водовідведення для комфорту наших клієнтів"</p>
             </hero::Comp>
 
-            <main class="container mx-auto px-4 py-12">
+            <main class="container mx-auto px-4">
                 <section class="py-16 bg-white">
                     <div class="container mx-auto px-4">
                         <h2 class="text-3xl font-bold text-center mb-12">"Про нашу компанію"</h2>

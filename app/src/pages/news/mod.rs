@@ -14,13 +14,13 @@ pub fn Comp() -> impl IntoView {
         <h1 class="text-3xl md:text-4xl font-bold text-center">"Новини та оголошення"</h1>
       </hero::Comp>
 
-      <main class="container mx-auto px-4 py-12">
-        <searchbar::Comp />
-        <div>
-          <newsitem::Comp />
-          <newsitem::Comp />
-          <newsitem::Comp />
-        </div>
+      <searchbar::Comp />
+
+      <main class="container mx-auto grid gap-8 max-w-5xl px-4 py-12">
+        <pagination::Comp />
+        <newsitem::Comp image="/images/mock_main/news/1.png".to_string() />
+        <newsitem::Comp image="/images/mock_main/news/2.png".to_string() />
+        <newsitem::Comp image="/images/mock_main/news/3.png".to_string() />
         <pagination::Comp />
       </main>
     </>
