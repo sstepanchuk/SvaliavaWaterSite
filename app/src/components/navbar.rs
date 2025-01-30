@@ -11,6 +11,7 @@ pub fn Comp() -> impl IntoView {
     // Function to toggle the menu
     let toggle_menu = move |_| {
       set_is_menu_open.set(!is_menu_open.get());
+      logging::log!("Value: {}", is_menu_open.get());
     };
 
     let location = use_location();

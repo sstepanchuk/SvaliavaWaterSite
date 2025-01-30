@@ -1,4 +1,5 @@
 use leptos::prelude::*;
+use leptos_image::Image;
 
 #[component]
 pub fn Comp(image: String) -> impl IntoView {
@@ -6,7 +7,7 @@ pub fn Comp(image: String) -> impl IntoView {
     <article class="bg-white rounded-lg shadow-lg overflow-hidden transform transition duration-300 hover:-translate-y-1 hover:shadow-xl">
       <div class="md:flex">
         <div class="md:w-1/3">
-          <img src=image alt="Новина 1" class="w-full h-full object-cover"/>
+          <Image src=image alt="Новина 1" class="w-full h-full object-cover"/>
         </div>
         <div class="p-6 md:w-2/3">
           <div class="flex items-center text-gray-600 text-sm mb-2">

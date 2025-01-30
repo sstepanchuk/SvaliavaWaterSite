@@ -1,5 +1,6 @@
 use leptos::prelude::*;
 use leptos_meta::provide_meta_context;
+use leptos_image::provide_image_context;
 use leptos_router::components::*;
 use leptos_router::path;
 use crate::components::*;
@@ -9,6 +10,7 @@ use crate::pages::*;
 pub fn App() -> impl IntoView {
     // Provides context that manages stylesheets, titles, meta tags, etc.
     provide_meta_context();
+    provide_image_context();
 
     view! {
         // content for this welcome page

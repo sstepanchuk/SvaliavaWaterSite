@@ -9,21 +9,32 @@ lto = true
 opt-level = 'z'
 
 [workspace.dependencies]
-leptos = { version = "0.7.3" }
-leptos_meta = { version = "0.7.3"}
-leptos_router = { version = "0.7.3" }
-leptos_axum = { version = "0.7.3" }
+leptos = { version = "0.7.4" }
+leptos_meta = { version = "0.7.4"}
+leptos_router = { version = "0.7.4" }
+leptos_axum = { version = "0.7.4", features = ["tracing"]}
+leptos_integration_utils = { version = "0.7.4" }
+leptos_image = { git = "https://github.com/sstepanchuk/leptos-image" }
+
+tracing = "0.1.41"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"]}
+tracing-log = "0.2.0"
+tracing-wasm = "0.2.1"
+
+log = "0.4.25"
+console_log = "1.0.0"
+console_error_panic_hook = "0.1.7"
 
 axum = "0.7"
+tower = { version = "0.5.2" }
+tower-http = { version = "0.6.2" }
 cfg-if = "1"
-console_error_panic_hook = "0.1.7"
-console_log = "1"
 http = "1"
-log = "0.4.20"
-simple_logger = "5.0.0"
 thiserror = "2.0.11"
 tokio = { version = "1.33.0", features = ["full"] }
 wasm-bindgen = "=0.2.100"
+web-sys = "0.3.77"
+
 
 # See https://github.com/akesson/cargo-leptos for documentation of all the parameters.
 
@@ -32,7 +43,7 @@ wasm-bindgen = "=0.2.100"
 [[workspace.metadata.leptos]]
 # this name is used for the wasm, js and css file names
 name = "svaliava-water-site"
-
+#output-name = "svaliava-water-site"
 # the package in the workspace that contains the server binary (binary crate)
 bin-package = "server"
 
