@@ -13,16 +13,14 @@ use std::time::Duration;
 use leptos_image::*;
 use tracing::{info, error};
 use tracing_subscriber::{fmt, filter::EnvFilter, prelude::*};
-use tracing_log::LogTracer;
 
 #[tokio::main]
 async fn main() {
     // Initialize tracing
-    //LogTracer::init().expect("Failed to set log tracer");
 
     tracing_subscriber::registry()
         .with(fmt::layer())
-        .with(EnvFilter::from_default_env().add_directive("info".parse().unwrap()))
+        .with(EnvFilter::from_default_env().add_directive("debug".parse().unwrap()))
         .init();
 
     let conf = get_configuration(Some("./Cargo.toml")).unwrap();
@@ -45,9 +43,6 @@ async fn main() {
         .layer(
             CompressionLayer::new()
                 .quality(CompressionLevel::Best)
-                .gzip(true)
-                .br(true)
-                .zstd(true),
         )
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
         .into_inner();
@@ -71,10 +66,6 @@ async fn main() {
             move || shell(state.leptos_options.clone())
         })
         .image_cache_route(&state)
-        /* .leptos_routes(&leptos_options, routes, {
-            let leptos_options = leptos_options.clone();
-            move || shell(leptos_options.clone())
-        })*/
         .fallback(file_and_error_handler(shell))
         .layer(middleware_stack)
         .with_state(state);

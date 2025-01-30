@@ -13,7 +13,7 @@ pub fn Comp() -> impl IntoView {
             <p class="text-center text-lg mt-4">"Зв'яжіться з нами будь-яким зручним способом"</p>
         </hero::Comp>
           
-        <main class="container mx-auto px-4 py-12">
+        <main class="container mx-auto max-w-5xl px-4 py-12">
           <div class="grid md:grid-cols-3 gap-8 mb-12">
               <div class="bg-white rounded-lg shadow-lg p-8 text-center transform transition duration-300 hover:-translate-y-1 hover:shadow-xl">
                   <div class="text-blue-600 text-4xl mb-4">

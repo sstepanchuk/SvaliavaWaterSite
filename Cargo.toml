@@ -18,7 +18,6 @@ leptos_image = { git = "https://github.com/sstepanchuk/leptos-image" }
 
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"]}
-tracing-log = "0.2.0"
 tracing-wasm = "0.2.1"
 
 log = "0.4.25"
