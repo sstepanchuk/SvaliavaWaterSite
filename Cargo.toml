@@ -42,7 +42,7 @@ web-sys = "0.3.77"
 [[workspace.metadata.leptos]]
 # this name is used for the wasm, js and css file names
 name = "svaliava-water-site"
-#output-name = "svaliava-water-site"
+output-name = "svaliava-water-site"
 # the package in the workspace that contains the server binary (binary crate)
 bin-package = "server"
 
