@@ -14,11 +14,12 @@ pub fn shell(options: LeptosOptions) -> impl IntoView {
             <head>
                 <meta charset="utf-8"/>
                 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+                <Script src="https://cdn.tailwindcss.com"/>
+                <AutoReload options=options.clone() />
+                <HydrationScripts options=options.clone()/>
+                <Stylesheet href=format!("/pkg/{}.css", options.output_name) />
+
                 <Script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" defer="" async_="" />
-                <Script src="https://cdn.tailwindcss.com" defer="" async_="" />
-                <Stylesheet href="/pkg/svaliava-water-site.css" />
-                <AutoReload options=options.clone()/>
-                <HydrationScripts options/>
                 <MetaTags/>
             </head>
             <body class="h-full flex flex-col">
