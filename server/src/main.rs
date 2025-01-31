@@ -3,11 +3,13 @@ mod shared;
 use app::*;
 use axum::http::HeaderValue;
 use axum::Router;
-use dotenv::dotenv;
+use axum_server::tls_rustls::RustlsConfig;
+use base64::{engine::general_purpose::STANDARD, Engine as _};
 use leptos::prelude::*;
 use leptos_axum::{generate_route_list, LeptosRoutes};
 use leptos_image::*;
 use shared::{file_and_error_handler, AppState};
+use tracing::level_filters::LevelFilter;
 use std::env;
 use std::time::Duration;
 use tower::ServiceBuilder;
@@ -15,31 +17,33 @@ use tower_http::compression::{CompressionLayer, CompressionLevel};
 use tower_http::cors::{AllowOrigin, CorsLayer};
 use tower_http::timeout::TimeoutLayer;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer};
-use tracing::{error, info};
+use tracing::{debug, info, warn};
 use tracing_subscriber::{filter::EnvFilter, fmt, prelude::*};
 
 #[tokio::main]
 async fn main() {
     // load env vars
-    dotenv().ok();
+    match env::current_exe() {
+        Ok(path) => println!("Current executable path: {}", path.display()),
+        Err(e) => eprintln!("Failed to get current executable path: {}", e),
+    }
+
+    dotenv::dotenv().ok();
 
     // Initialize tracing
-
     tracing_subscriber::registry()
         .with(fmt::layer())
         .with(
-            EnvFilter::from_default_env().add_directive(
-                env::var("LOG_LEVEL")
-                    .unwrap_or_else(|_| "info".to_string())
-                    .parse()
-                    .unwrap(),
-            ),
+            EnvFilter::builder()
+                .with_default_directive(LevelFilter::ERROR.into())
+                .from_env_lossy()
         )
         .init();
 
     let conf = get_configuration(Some("./Cargo.toml")).unwrap();
-    let addr = conf.leptos_options.site_addr;
+    let mut addr = conf.leptos_options.site_addr;
     let leptos_options = conf.leptos_options;
+    let tls_config: Option<RustlsConfig> = get_tls_config().await.unwrap();
 
     // Log application start
     info!("Starting application with configuration");
@@ -87,11 +91,75 @@ async fn main() {
         .layer(middleware_stack)
         .with_state(state);
 
-    // Run the app with hyper
-    info!("Listening on http://{}", &addr);
-    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+    // If we have TLS config, run HTTPS and HTTP servers
+    if let Some(tls_config) = tls_config {
+        addr.set_port(addr.port() + 443);
+        info!("Starting HTTPS server on port {}", addr);
 
-    if let Err(e) = axum::serve(listener, app.into_make_service()).await {
-        error!("Server encountered an error: {}", e);
+        if let Err(e) = axum_server::bind_rustls(addr, tls_config)
+            .serve(app.clone().into_make_service())
+            .await
+        {
+            warn!("HTTPS server failed: {}", e);
+        }
+    } else {
+        info!("Starting HTTP server on port {}", addr.port());
+
+        // Start HTTP server (without TLS)
+        if let Err(e) = axum_server::bind(addr).serve(app.into_make_service()).await {
+            warn!("HTTP server failed: {}", e);
+        }
+    }
+}
+
+async fn get_tls_config() -> Result<Option<RustlsConfig>> {
+    // Retrieve base64-encoded certificate and key from ENV variables
+    let cert_base64 = match env::var("TLS_CERT") {
+        Ok(val) => val,
+        Err(_) => {
+            warn!("TLS_CERT environment variable not set");
+            return Ok(None); // Return None if the certificate variable is not set
+        }
+    };
+
+    let key_base64 = match env::var("TLS_KEY") {
+        Ok(val) => val,
+        Err(_) => {
+            warn!("TLS_KEY environment variable not set");
+            return Ok(None); // Return None if the key variable is not set
+        }
+    };
+
+    debug!("Decoding base64-encoded certificate and key");
+
+    // Decode the base64 strings into bytes
+    let cert_bytes = match STANDARD.decode(&cert_base64) {
+        Ok(bytes) => bytes,
+        Err(_) => {
+            warn!("Failed to decode certificate from base64");
+            return Ok(None); // Return None if base64 decoding fails for certificate
+        }
+    };
+
+    let key_bytes = match STANDARD.decode(&key_base64) {
+        Ok(bytes) => bytes,
+        Err(_) => {
+            warn!("Failed to decode private key from base64");
+            return Ok(None); // Return None if base64 decoding fails for private key
+        }
+    };
+
+    debug!("Successfully decoded certificate and key");
+
+    // Create and return the RustlsConfig directly from the decoded bytes
+    match RustlsConfig::from_pem(cert_bytes, key_bytes).await {
+        Ok(config) => {
+            debug!("TLS configuration successfully created");
+            Ok(Some(config))
+        }
+        Err(e) => {
+            warn!("Failed to create TLS config: {}", e);
+            Ok(None)
+        }
     }
 }
