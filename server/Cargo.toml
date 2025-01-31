@@ -6,6 +6,8 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+dotenv.workspace = true
+
 app = { path = "../app", default-features = false, features = ["ssr"] }
 leptos = { workspace = true, features = [ "ssr" ]}
 leptos_axum.workspace = true
@@ -21,7 +23,7 @@ futures-core = "0.3.31"
 futures-util = "0.3.31"
 
 tower = { workspace = true, features = [ "util" ] }
-tower-http = { workspace = true, features = ["compression-br", "compression-gzip", "compression-zstd", "compression-deflate", "timeout", "trace"] }
+tower-http = { workspace = true, features = ["cors", "compression-br", "compression-gzip", "compression-zstd", "compression-deflate", "timeout", "trace"] }
 
 axum.workspace = true
 tokio.workspace = true

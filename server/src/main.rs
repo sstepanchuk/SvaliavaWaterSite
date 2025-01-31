@@ -1,26 +1,40 @@
 mod shared;
 
+use app::*;
+use axum::http::HeaderValue;
 use axum::Router;
+use dotenv::dotenv;
 use leptos::prelude::*;
 use leptos_axum::{generate_route_list, LeptosRoutes};
-use app::*;
-use shared::{file_and_error_handler, AppState};
-use tower_http::timeout::TimeoutLayer;
-use tower_http::compression::{CompressionLayer, CompressionLevel};
-use tower::ServiceBuilder;
-use tower_http::trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer};
-use std::time::Duration;
 use leptos_image::*;
-use tracing::{info, error};
-use tracing_subscriber::{fmt, filter::EnvFilter, prelude::*};
+use shared::{file_and_error_handler, AppState};
+use std::env;
+use std::time::Duration;
+use tower::ServiceBuilder;
+use tower_http::compression::{CompressionLayer, CompressionLevel};
+use tower_http::cors::{AllowOrigin, CorsLayer};
+use tower_http::timeout::TimeoutLayer;
+use tower_http::trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer};
+use tracing::{error, info};
+use tracing_subscriber::{filter::EnvFilter, fmt, prelude::*};
 
 #[tokio::main]
 async fn main() {
+    // load env vars
+    dotenv().ok();
+
     // Initialize tracing
 
     tracing_subscriber::registry()
         .with(fmt::layer())
-        .with(EnvFilter::from_default_env().add_directive("debug".parse().unwrap()))
+        .with(
+            EnvFilter::from_default_env().add_directive(
+                env::var("LOG_LEVEL")
+                    .unwrap_or_else(|_| "info".to_string())
+                    .parse()
+                    .unwrap(),
+            ),
+        )
         .init();
 
     let conf = get_configuration(Some("./Cargo.toml")).unwrap();
@@ -40,26 +54,29 @@ async fn main() {
                 .make_span_with(DefaultMakeSpan::new().include_headers(true))
                 .on_response(DefaultOnResponse::new().include_headers(true)),
         )
-        .layer(
-            CompressionLayer::new()
-                .quality(CompressionLevel::Best)
-        )
+        .layer(CorsLayer::new().allow_origin({
+            // Split the environment variable into a Vec<&str>
+            AllowOrigin::list(
+                env::var("ALLOWED_ORIGINS")
+                    .unwrap_or_else(|_| "http://localhost:3000,http://127.0.0.1:3000".to_string())
+                    .split(',')
+                    .map(|origin| HeaderValue::from_str(origin.trim()).unwrap())
+                    .collect::<Vec<_>>(),
+            )
+        }))
+        .layer(CompressionLayer::new().quality(CompressionLevel::Best))
         .layer(TimeoutLayer::new(Duration::from_secs(30)))
         .into_inner();
 
     // Optimizer
-    let optimizer = ImageOptimizer::new(
-        "/__cache/image",
-        leptos_options.site_root.to_string(),
-        1,
-    );
+    let optimizer = ImageOptimizer::new("/__cache/image", leptos_options.site_root.to_string(), 1);
 
     // State
-    let state = AppState { 
-        leptos_options: leptos_options.clone(), 
+    let state = AppState {
+        leptos_options: leptos_options.clone(),
         optimizer: optimizer,
     };
-    
+
     let app = Router::new()
         .leptos_routes_with_context(&state, routes, state.optimizer.provide_context(), {
             let state = state.clone();
