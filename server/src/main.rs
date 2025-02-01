@@ -1,7 +1,10 @@
 mod shared;
 
 use app::*;
+use axum::extract::Host;
 use axum::http::HeaderValue;
+use axum::response::Redirect;
+use axum::routing::get;
 use axum::Router;
 use axum_server::tls_rustls::RustlsConfig;
 use base64::{engine::general_purpose::STANDARD, Engine as _};
@@ -11,6 +14,7 @@ use leptos_image::*;
 use shared::{file_and_error_handler, AppState};
 use tracing::level_filters::LevelFilter;
 use std::env;
+use std::net::SocketAddr;
 use std::time::Duration;
 use tower::ServiceBuilder;
 use tower_http::compression::{CompressionLayer, CompressionLevel};
@@ -93,6 +97,8 @@ async fn main() {
 
     // If we have TLS config, run HTTPS and HTTP servers
     if let Some(tls_config) = tls_config {
+        tokio::spawn(start_http_redirect_server(addr.clone()));
+
         addr.set_port(addr.port() + 443);
         info!("Starting HTTPS server on port {}", addr);
 
@@ -161,5 +167,23 @@ async fn get_tls_config() -> Result<Option<RustlsConfig>> {
             warn!("Failed to create TLS config: {}", e);
             Ok(None)
         }
+    }
+}
+
+pub async fn start_http_redirect_server(addr: SocketAddr) {
+    let app = Router::new().fallback(
+        get(|Host(hostname): Host| async move {
+            let redirect_url = format!("https://{}/", hostname);
+            Redirect::permanent(&redirect_url)
+        })
+    );
+
+    info!("Starting HTTP redirect server on {}", addr);
+
+    if let Err(e) = axum_server::bind(addr)
+        .serve(app.into_make_service())
+        .await
+    {
+        warn!("HTTP redirect server failed: {}", e);
     }
 }
