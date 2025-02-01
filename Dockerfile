@@ -41,6 +41,7 @@ COPY --from=builder /app/target/site /app/site
 
 # Copy Cargo.toml if it’s needed at runtime
 COPY --from=builder /app/Cargo.toml /app/
+COPY --from=builder /app/.env /app/
 
 # Set any required env variables and
 ENV RUST_LOG="info"
