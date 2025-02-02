@@ -1,7 +1,7 @@
 use leptos::prelude::*;
 use leptos_router::components::*;
 use leptos_router::hooks::*;
-use leptos::logging;
+use tracing::info;
 
 #[component]
 pub fn Comp() -> impl IntoView {
@@ -11,14 +11,14 @@ pub fn Comp() -> impl IntoView {
     // Function to toggle the menu
     let toggle_menu = move |_| {
       set_is_menu_open.set(!is_menu_open.get());
-      logging::log!("Value: {}", is_menu_open.get());
+      info!("Value: {}", is_menu_open.get());
     };
 
     let location = use_location();
     Effect::new(move |_| {
         let location = location.pathname.get();
 
-        logging::log!("Value: {}", location);
+        info!("Value: {}", location);
         set_is_menu_open.set(false);
     });
 

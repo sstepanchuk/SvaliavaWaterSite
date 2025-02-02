@@ -20,8 +20,8 @@ leptos_integration_utils = { version = "0.7.4" }
 leptos_image = { git = "https://github.com/sstepanchuk/leptos-image" }
 
 tracing = "0.1.41"
-tracing-subscriber = { version = "0.3.19", features = ["env-filter"]}
-tracing-wasm = "0.2.1"
+tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
+tracing-subscriber-wasm = { version = "0.1.0" }
 
 log = "0.4.25"
 console_log = "1.0.0"

@@ -2,11 +2,15 @@
 pub fn hydrate() {
     use app::*;
     
-    // Initialize console logging for `log`-based macros
-    _ = console_log::init_with_level(log::Level::Debug);
-
-    // Set up panic hooks for better debugging in the browser
     console_error_panic_hook::set_once();
+
+    tracing_subscriber::fmt()
+        .with_writer(
+            tracing_subscriber_wasm::MakeConsoleWriter::default()
+                .map_trace_level_to(tracing::Level::DEBUG),
+        )
+        .without_time()
+        .init();
 
     // Hydrate the app
     leptos::mount::hydrate_body(App);

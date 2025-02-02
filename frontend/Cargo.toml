@@ -12,9 +12,10 @@ crate-type = ["cdylib", "rlib"]
 app = { path = "../app", default-features = false, features = ["hydrate"] }
 leptos = { workspace = true, features = [ "hydrate" ] }
 
-log.workspace = true
-console_log.workspace = true
-console_error_panic_hook.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+tracing-subscriber-wasm.workspace = true
 
+console_error_panic_hook.workspace = true
 
 wasm-bindgen.workspace = true
