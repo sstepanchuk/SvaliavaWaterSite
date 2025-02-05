@@ -1,8 +1,9 @@
 mod shared;
 
 use app::*;
+use axum::body::Bytes;
 use axum::extract::Host;
-use axum::http::HeaderValue;
+use axum::http::{HeaderValue, Method};
 use axum::response::Redirect;
 use axum::routing::get;
 use axum::Router;
@@ -12,6 +13,7 @@ use leptos::prelude::*;
 use leptos_axum::{generate_route_list, LeptosRoutes};
 use leptos_image::*;
 use shared::{file_and_error_handler, AppState};
+use tower_http::LatencyUnit;
 use tracing::level_filters::LevelFilter;
 use std::env;
 use std::net::SocketAddr;
@@ -21,7 +23,7 @@ use tower_http::compression::{CompressionLayer, CompressionLevel};
 use tower_http::cors::{AllowOrigin, CorsLayer};
 use tower_http::timeout::TimeoutLayer;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer};
-use tracing::{debug, info, warn};
+use tracing::{debug, info, trace, warn};
 use tracing_subscriber::{filter::EnvFilter, fmt, prelude::*};
 
 #[tokio::main]
@@ -39,7 +41,7 @@ async fn main() {
         .with(fmt::layer())
         .with(
             EnvFilter::builder()
-                .with_default_directive(LevelFilter::ERROR.into())
+                .with_default_directive(LevelFilter::INFO.into())
                 .from_env_lossy()
         )
         .init();
@@ -58,23 +60,22 @@ async fn main() {
     // Create a middleware stack
     let middleware_stack = ServiceBuilder::new()
         .layer(
-            TraceLayer::new_for_http()
-                .make_span_with(DefaultMakeSpan::new().include_headers(true))
-                .on_response(DefaultOnResponse::new().include_headers(true)),
+            CompressionLayer::new()
+                .quality(CompressionLevel::Best)
         )
-        .layer(CorsLayer::new().allow_origin({
-            // Split the environment variable into a Vec<&str>
-            AllowOrigin::list(
-                env::var("ALLOWED_ORIGINS")
-                    .unwrap_or_else(|_| "http://localhost:3000,http://127.0.0.1:3000".to_string())
-                    .split(',')
-                    .map(|origin| HeaderValue::from_str(origin.trim()).unwrap())
-                    .collect::<Vec<_>>(),
+        .layer(
+            TraceLayer::new_for_http()
+                .on_body_chunk(|chunk: &Bytes, latency: Duration, _: &tracing::Span| {
+                    trace!(size_bytes = chunk.len(), latency = ?latency, "sending body chunk")
+                })
+                .make_span_with(DefaultMakeSpan::new().include_headers(true))
+                .on_response(DefaultOnResponse::new().include_headers(true).latency_unit(LatencyUnit::Micros))
+        )
+        .layer(
+            TimeoutLayer::new(
+                Duration::from_secs(30)
             )
-        }))
-        .layer(CompressionLayer::new().quality(CompressionLevel::Best))
-        .layer(TimeoutLayer::new(Duration::from_secs(30)))
-        .into_inner();
+        ).into_inner();
 
     // Optimizer
     let optimizer = ImageOptimizer::new("/__cache/image", leptos_options.site_root.to_string(), 1);
@@ -91,7 +92,7 @@ async fn main() {
             move || shell(state.leptos_options.clone())
         })
         .image_cache_route(&state)
-        .fallback(file_and_error_handler(shell))
+        .fallback(file_and_error_handler(shell) )
         .layer(middleware_stack)
         .with_state(state);
 
@@ -103,7 +104,7 @@ async fn main() {
         info!("Starting HTTPS server on port {}", addr);
 
         if let Err(e) = axum_server::bind_rustls(addr, tls_config)
-            .serve(app.clone().into_make_service())
+            .serve(app.into_make_service())
             .await
         {
             warn!("HTTPS server failed: {}", e);
