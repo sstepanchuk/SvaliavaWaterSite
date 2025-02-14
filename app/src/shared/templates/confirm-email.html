@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Підтвердіть вашу електронну адресу</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      background-color: #0077be;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .header img {
+      max-width: 200px;
+    }
+
+    .content {
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 5px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #0077be;
+      color: #ffffff;
+      text-decoration: none;
+      border-radius: 5px;
+      margin: 20px 0;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      color: #666666;
+    }
+
+    @media only screen and (max-width: 600px) {
+      .container {
+        width: 100% !important;
+      }
+
+      .content {
+        padding: 20px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <img src="{{logo_url}}" alt="Водопостачання та водовідведення">
+    </div>
+    <div class="content">
+      <h2>Підтвердіть вашу електронну адресу</h2>
+      <p>Вітаємо!</p>
+      <p>Дякуємо за реєстрацію в системі КП "Водопостачання та водовідведення". Для завершення реєстрації, будь ласка, підтвердіть вашу
+        електронну адресу натиснувши кнопку нижче:</p>
+      <div style="text-align: center;">
+        <a href="{{confirmation_link}}" class="button">Підтвердити email</a>
+      </div>
+      <p>Якщо ви не реєструвалися в нашій системі, просто проігноруйте цей лист.</p>
+      <p>Кнопка підтвердження буде активною протягом 24 годин.</p>
+      <p>З повагою,<br>Команда КП "Водопостачання та водовідведення"</p>
+    </div>
+    <div class="footer">
+      <p>© 2025 КП "Водопостачання та водовідведення". Всі права захищені.</p>
+    </div>
+  </div>
+</body>
+
+</html>

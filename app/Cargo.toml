@@ -3,20 +3,39 @@ name = "app"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
+#leptos
 leptos.workspace = true
 leptos_meta.workspace = true
 leptos_router.workspace = true
-leptos_axum = { workspace = true, optional = true }
 leptos_image.workspace = true
+
+# servel leptos
+axum = { workspace = true, optional = true }
+leptos_axum = { workspace = true, optional = true }
+
+#logging
 tracing.workspace = true
+
+#db
+sea-orm = { workspace = true, optional = true }
+
+#templates
+askama = { workspace = true, optional = true }
 
 [features]
 default = []
 hydrate = ["leptos/hydrate", "leptos_image/hydrate"]
 #hydrate = ["leptos/hydrate"]
-ssr = ["leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr", "dep:leptos_axum", "leptos_image/ssr"]
+ssr = [
+  "leptos/ssr",
+  "leptos_meta/ssr",
+  "leptos_router/ssr", 
+  "leptos_image/ssr", 
+  "dep:leptos_axum", 
+  "dep:sea-orm",
+  "dep:askama",
+  "dep:axum"
+]
 #ssr = ["leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr", "dep:leptos_axum"]
 

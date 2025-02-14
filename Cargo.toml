@@ -1,6 +1,10 @@
 [workspace]
 resolver = "2"
-members = ["app", "frontend", "server"]
+members = [
+  "app",
+  "frontend",
+  "server",
+]
 
 # need to be applied only to wasm build
 [profile.release]
@@ -12,16 +16,19 @@ opt-level = 'z'
 dotenv = { version = "0.15.0" }
 base64 = { version = "0.22.1" }
 
-leptos = { version = "0.7.4" }
-leptos_meta = { version = "0.7.4"}
-leptos_router = { version = "0.7.4" }
-leptos_axum = { version = "0.7.4", features = ["tracing"]}
-leptos_integration_utils = { version = "0.7.4" }
-leptos_image = { git = "https://github.com/sstepanchuk/leptos-image" }
+leptos = { version = "0.7.7" }
+leptos_meta = { version = "0.7.7" }
+leptos_router = { version = "0.7.7" }
+leptos_axum = { version = "0.7.7", features = ["tracing"] }
+leptos_image = { git = "https://github.com/sstepanchuk/leptos-image", default-features = false }
 
 tracing = "0.1.41"
 tracing-subscriber = { version = "0.3.19", features = ["env-filter"] }
 tracing-subscriber-wasm = { version = "0.1.0" }
+
+#templates
+serde = "1.0.217"
+askama = "0.12.1"
 
 log = "0.4.25"
 console_log = "1.0.0"
@@ -37,6 +44,15 @@ thiserror = "2.0.11"
 tokio = { version = "1.33.0", features = ["full"] }
 wasm-bindgen = "=0.2.100"
 web-sys = "0.3.77"
+
+[workspace.dependencies.sea-orm]
+version = "1.1.4" # sea-orm version
+features = [
+  "sqlx-postgres",
+  "runtime-tokio-rustls",
+  "debug-print"
+]
+
 
 
 # See https://github.com/akesson/cargo-leptos for documentation of all the parameters.

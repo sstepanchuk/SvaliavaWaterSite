@@ -3,8 +3,17 @@ use leptos_image::Image;
 
 #[server(GetRandomText)]
 pub async fn get_text() -> Result<String, ServerFnError> {
-    // Просто повертаємо фіксований текст замість рандомного
-    Ok("Дякуємо за ваше звернення! Роботи виконуються за графіком.".to_string())
+    use crate::shared::templates::*;
+    use askama::Template;
+    
+    let email_template = ConfirmEmail {
+        confirmation_link: "test",
+        logo_url: "test2"
+    };
+
+    Ok(
+        email_template.render()?
+    )
 }
 
 #[component]

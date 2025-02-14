@@ -1,9 +1,7 @@
-mod shared;
-
+use app::shared::state::{init_state, AppState};
 use app::*;
 use axum::body::Bytes;
 use axum::extract::Host;
-use axum::http::{HeaderValue, Method};
 use axum::response::Redirect;
 use axum::routing::get;
 use axum::Router;
@@ -12,7 +10,6 @@ use base64::{engine::general_purpose::STANDARD, Engine as _};
 use leptos::prelude::*;
 use leptos_axum::{generate_route_list, LeptosRoutes};
 use leptos_image::*;
-use shared::{file_and_error_handler, AppState};
 use tower_http::LatencyUnit;
 use tracing::level_filters::LevelFilter;
 use std::env;
@@ -20,18 +17,17 @@ use std::net::SocketAddr;
 use std::time::Duration;
 use tower::ServiceBuilder;
 use tower_http::compression::{CompressionLayer, CompressionLevel};
-use tower_http::cors::{AllowOrigin, CorsLayer};
 use tower_http::timeout::TimeoutLayer;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer};
-use tracing::{debug, info, trace, warn};
+use tracing::{debug, error, info, trace, warn};
 use tracing_subscriber::{filter::EnvFilter, fmt, prelude::*};
 
 #[tokio::main]
 async fn main() {
     // load env vars
     match env::current_exe() {
-        Ok(path) => println!("Current executable path: {}", path.display()),
-        Err(e) => eprintln!("Failed to get current executable path: {}", e),
+        Ok(path) => info!("Current executable path: {}", path.display()),
+        Err(e) => error!("Failed to get current executable path: {}", e),
     }
 
     dotenv::dotenv().ok();
@@ -50,6 +46,8 @@ async fn main() {
     let mut addr = conf.leptos_options.site_addr;
     let leptos_options = conf.leptos_options;
     let tls_config: Option<RustlsConfig> = get_tls_config().await.unwrap();
+
+    let state = init_state(leptos_options).await.unwrap();
 
     // Log application start
     info!("Starting application with configuration");
@@ -77,22 +75,18 @@ async fn main() {
             )
         ).into_inner();
 
-    // Optimizer
-    let optimizer = ImageOptimizer::new("/__cache/image", leptos_options.site_root.to_string(), 1);
-
-    // State
-    let state = AppState {
-        leptos_options: leptos_options.clone(),
-        optimizer: optimizer,
-    };
-
     let app = Router::new()
         .leptos_routes_with_context(&state, routes, state.optimizer.provide_context(), {
             let state = state.clone();
             move || shell(state.leptos_options.clone())
         })
         .image_cache_route(&state)
-        .fallback(file_and_error_handler(shell) )
+        .fallback(
+            leptos_axum::file_and_error_handler_with_context::<AppState, _>(
+                state.optimizer.provide_context(), 
+                shell
+            )
+        )
         .layer(middleware_stack)
         .with_state(state);
 
