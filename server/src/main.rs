@@ -21,6 +21,7 @@ use tower_http::timeout::TimeoutLayer;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnResponse, TraceLayer};
 use tracing::{debug, error, info, trace, warn};
 use tracing_subscriber::{filter::EnvFilter, fmt, prelude::*};
+use migration::{Migrator, MigratorTrait};
 
 #[tokio::main]
 async fn main() {
@@ -30,7 +31,7 @@ async fn main() {
         Err(e) => error!("Failed to get current executable path: {}", e),
     }
 
-    dotenv::dotenv().ok();
+    dotenvy::dotenv().ok();
 
     // Initialize tracing
     tracing_subscriber::registry()
@@ -48,6 +49,9 @@ async fn main() {
     let tls_config: Option<RustlsConfig> = get_tls_config().await.unwrap();
 
     let state = init_state(leptos_options).await.unwrap();
+
+    // Run db migrations
+    Migrator::up(&state.db, None).await.unwrap();
 
     // Log application start
     info!("Starting application with configuration");

@@ -7,7 +7,7 @@ include = [".env"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-dotenv.workspace = true
+dotenvy.workspace = true
 base64.workspace = true
 
 app = { path = "../app", default-features = false, features = ["ssr"] }
@@ -28,3 +28,4 @@ axum-server = { workspace = true, features = ["tls-rustls"] }
 tokio.workspace = true
 
 sea-orm.workspace = true
+migration = { path = "../migration" }

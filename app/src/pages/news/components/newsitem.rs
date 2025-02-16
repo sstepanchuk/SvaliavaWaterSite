@@ -1,11 +1,14 @@
 use leptos::{prelude::*, web_sys, task::spawn_local};
 use leptos_image::Image;
 
+#[cfg(feature = "ssr")]
+use {
+    crate::shared::templates::*,
+    askama::Template,
+};
+
 #[server(GetRandomText)]
 pub async fn get_text() -> Result<String, ServerFnError> {
-    use crate::shared::templates::*;
-    use askama::Template;
-    
     let email_template = ConfirmEmail {
         confirmation_link: "test",
         logo_url: "test2"

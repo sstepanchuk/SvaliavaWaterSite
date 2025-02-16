@@ -10,10 +10,6 @@ leptos_meta.workspace = true
 leptos_router.workspace = true
 leptos_image.workspace = true
 
-# servel leptos
-axum = { workspace = true, optional = true }
-leptos_axum = { workspace = true, optional = true }
-
 #logging
 tracing.workspace = true
 
@@ -22,6 +18,21 @@ sea-orm = { workspace = true, optional = true }
 
 #templates
 askama = { workspace = true, optional = true }
+
+#validation
+validator = { workspace = true, optional = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+
+# server leptos
+axum = { workspace = true, optional = true }
+leptos_axum = { workspace = true, optional = true }
+
+#error handling
+thiserror = { workspace = true }
+
+#hashing
+argon2 = { workspace = true, optional = true }
 
 [features]
 default = []
@@ -35,7 +46,9 @@ ssr = [
   "dep:leptos_axum", 
   "dep:sea-orm",
   "dep:askama",
-  "dep:axum"
+  "dep:axum",
+  "dep:validator",
+  "dep:argon2"
 ]
 #ssr = ["leptos/ssr", "leptos_meta/ssr", "leptos_router/ssr", "dep:leptos_axum"]
 
