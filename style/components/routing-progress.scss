@@ -1,0 +1,34 @@
+.routing-progress {
+  width: 100%;
+  height: 0; /* Set initial height to 0 (hidden by default) */
+  transition: 0.1s;
+  position: absolute;
+  top: 0;
+
+  progress {
+    padding: 0;
+    display: block;
+    width: 100%;
+    height: 0; /* Set progress bar height to 0 by default */
+    background-color: transparent; /* Transparent background for the progress bar */
+    appearance: none; /* Disable default styling in browsers like Safari */
+
+    /* Webkit progress bar styling */
+    &::-webkit-progress-bar {
+      background-color: transparent; /* Transparent track */
+    }
+
+    &::-webkit-progress-value {
+      background-color: rgb(76, 159, 247); /* Blue color for the progress */
+    }
+
+    /* Firefox progress bar styling */
+    &::-moz-progress-bar {
+      background-color: rgb(76, 159, 247); /* Blue color for the progress */
+    }
+  }
+
+  &.show progress {
+    height: 4px; /* Set height for when it's visible */
+  }
+}

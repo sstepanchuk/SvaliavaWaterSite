@@ -1,3 +1,2 @@
-pub mod main;
-pub mod news;
-pub mod contacts;
+pub mod admin;
+pub mod client;
