@@ -29,5 +29,5 @@ jobs:
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
           heroku_email: "stepanchuk.dev@gmail.com"
           usedocker: true
-        env:
+        env: |
           $(cat .env | xargs)
