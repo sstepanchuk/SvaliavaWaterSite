@@ -22,6 +22,12 @@ jobs:
           jsons: |
             ${{ toJSON(secrets) }}
 
+      - name: Export .env variables
+        run: |
+          echo "LOADED_ENVS<<EOF" >> $GITHUB_ENV
+          cat .env >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.13.15
         with:
@@ -29,5 +35,5 @@ jobs:
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
           heroku_email: "stepanchuk.dev@gmail.com"
           usedocker: true
-        env: |
-          $(cat .env | xargs)
+        env: 
+          ${{ env.LOADED_ENVS }}
