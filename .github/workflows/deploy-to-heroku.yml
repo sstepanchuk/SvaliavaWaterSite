@@ -21,17 +21,11 @@ jobs:
           jsons: |
             ${{ toJSON(secrets) }}
 
-      - name: Load .env variables
-        run: |
-          export $(grep -v '^#' .env | xargs)
-          echo "ENV_VARS=$(cat .env | tr '\n' ' ')" >> $GITHUB_ENV
-
       - name: Deploy to Heroku
-        uses: akhileshns/heroku-deploy@v3.13.15
+        uses: gonuit/heroku-docker-deploy@v1.3.3
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
-          heroku_email: "stepanchuk.dev@gmail.com"
-          usedocker: true
-        env: 
-          ${{ env.LOADED_ENVS }}
+          email: "stepanchuk.dev@gmail.com"
+          docker_options: "--no-cache --env-file .env"
+          process_type: web
