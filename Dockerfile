@@ -45,10 +45,10 @@ COPY --from=builder /app/.env /app/
 
 # Set any required env variables and
 ENV RUST_LOG="info"
-ENV LEPTOS_SITE_ADDR="0.0.0.0:3000"
+ENV LEPTOS_SITE_ADDR="0.0.0.0:80"
 ENV LEPTOS_SITE_ROOT="site"
-EXPOSE 3000
-EXPOSE 3443
+EXPOSE 80
+EXPOSE 443
 WORKDIR /app
 
 # -- NB: update binary name from "server" to match your app name in Cargo.toml --

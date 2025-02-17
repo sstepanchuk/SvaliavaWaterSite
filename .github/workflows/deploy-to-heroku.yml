@@ -1,0 +1,33 @@
+name: Deploy to Heroku
+
+env:
+  HEROKU_APP_NAME: "svaliava-water-site"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Pass secrets and vars to ENV
+        uses: ./.github/actions/merge-json-to-env
+        with:
+          jsons: |
+            ${{ toJSON(secrets) }}
+
+      - name: Deploy to Heroku
+        uses: akhileshns/heroku-deploy@v3.13.15
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ env.HEROKU_APP_NAME }}
+          heroku_email: "stepanchuk.dev@gmail.com"
+          usedocker: true
+        env:
+          $(cat .env | xargs)
