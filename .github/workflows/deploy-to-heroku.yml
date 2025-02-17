@@ -1,5 +1,4 @@
 name: Deploy to Heroku
-environment: stage
 env:
   HEROKU_APP_NAME: "svaliava-water-site"
 
@@ -11,7 +10,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    environment: stage
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
