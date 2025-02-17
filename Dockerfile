@@ -1,5 +1,5 @@
 # Get started with a build env with Rust nightly
-FROM rustlang/rust:stable-bullseye as builder
+FROM rust:bullseye as builder
 
 # If you’re using stable, use this instead
 # FROM rust:1.74-bullseye as builder
