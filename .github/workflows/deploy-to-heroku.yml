@@ -34,3 +34,4 @@ jobs:
           usedocker: true
           env_file: ".env"
           docker_heroku_process_type: "web"
+          stack: "container"
