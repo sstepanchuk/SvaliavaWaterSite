@@ -15,10 +15,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      - name: Pass secrets and vars to ENV
+        uses: ./.github/actions/merge-json-to-env
+        with:
+          jsons: |
+            ${{ toJSON(secrets) }}
+
       - name: Deploy to Heroku
-        uses: gonuit/heroku-docker-deploy@v1.3.3
+        uses: akhileshns/heroku-deploy@v3.13.15
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
-          email: "stepanchuk.dev@gmail.com"
-          process_type: web
+          heroku_email: "stepanchuk.dev@gmail.com"
+          usedocker: true
+          env_file: ".env"
+          docker_heroku_process_type: "web"
