@@ -26,7 +26,7 @@ jobs:
           curl https://cli-assets.heroku.com/install.sh | sh
 
       - name: Deploy to Heroku
-        uses: sstepanchuk/heroku-deploy
+        uses: sstepanchuk/heroku-deploy@master
         with:
           heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
           heroku_app_name: ${{ env.HEROKU_APP_NAME }}
