@@ -19,18 +19,23 @@ jobs:
 
     - name: 📂 Add CA certificate to Ubuntu root store and Docker config, then restart Docker
       run: |
-        # Decode and add CA certificate to the system root and Docker config
-        echo "${{ secrets.DOCKER_CA_CERT }}" | base64 -d | sudo tee /usr/local/share/ca-certificates/registry-ca.crt /etc/docker/certs.d/${{ secrets.DOCKER_REGISTRY_URL }}/ca.crt > /dev/null
+        # Decode CA certificate to a temporary file
+        echo "${{ secrets.DOCKER_CA_CERT }}" | base64 -d | sudo tee /tmp/registry-ca.crt > /dev/null
+        
+        # Move the certificate to the system root
+        sudo mv /tmp/registry-ca.crt /usr/local/share/ca-certificates/registry-ca.crt
         
         # Update system certificates
         sudo update-ca-certificates
+        
+        # Add the certificate to Docker config
+        sudo mkdir -p /etc/docker/certs.d/${{ secrets.DOCKER_REGISTRY_URL }}
+        sudo cp /usr/local/share/ca-certificates/registry-ca.crt /etc/docker/certs.d/${{ secrets.DOCKER_REGISTRY_URL }}/ca.crt
         
         # Restart Docker to apply the new CA certificate
         sudo systemctl restart docker
         
         echo "✅ CA certificate added to system root, Docker config, and Docker restarted."
-
-
 
     - name: 🔑 Log in to Private Registry
       uses: docker/login-action@v3
