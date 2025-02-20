@@ -4,7 +4,7 @@ env:
   ENV_FILE: .env
 on:
   push:
-    branches: [ ]
+    branches: [ "sdasdasdadas" ]
 concurrency:
   group: ${{ github.ref_name }}
   cancel-in-progress: true
