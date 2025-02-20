@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-and-push:
-    enviropment: stage
+    environment: stage
     runs-on: ubuntu-latest
 
     steps:
