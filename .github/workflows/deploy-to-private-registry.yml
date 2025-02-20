@@ -43,7 +43,7 @@ jobs:
       with:
         context: .
         push: true
-        tags: ${{ secrets.REGISTRY_URL }}/svaliava-water-site:latest
+        tags: ${{ secrets.DOCKER_REGISTRY_URL }}/svaliava-water-site:latest
 
     - name: ✅ Upload completed
       run: echo "🎉 Image successfully uploaded to Private Registry!"
