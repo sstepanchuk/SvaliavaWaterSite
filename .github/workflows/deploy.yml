@@ -2,9 +2,9 @@ name: CI/CD
 env:
   IMAGE_NAME: github/svaliava-water-site
   ENV_FILE: .env
-#on:
-#  push:
-#    branches: [ "main" ]
+on:
+  push:
+    branches: [ ]
 concurrency:
   group: ${{ github.ref_name }}
   cancel-in-progress: true
