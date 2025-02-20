@@ -52,6 +52,8 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         context: .
+        cache-from: type=gha
+        cache-to: type=gha,mode=max`
         push: true
         tags: ${{ secrets.DOCKER_REGISTRY_URL }}/svaliava-water-site:latest
 
