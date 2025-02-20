@@ -15,7 +15,7 @@ pub async fn get_text() -> Result<String, ServerFnError> {
     };
 
     Ok(
-        email_template.render()?
+        "TESTTT".to_string()
     )
 }
 
