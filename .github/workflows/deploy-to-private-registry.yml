@@ -1,0 +1,44 @@
+name: 🚀 Build/Push Docker Image to Private Registry
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 🛒 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 📂 Add Docker Registry CA cert
+      run: |
+        sudo mkdir -p /etc/docker/certs.d/${{ secrets.DOCKER_REGISTRY_URL }}
+        echo "${{ secrets.CA_CERT }}" | base64 -d | sudo tee /etc/docker/certs.d/${{ secrets.REGISTRY_URL }}/ca.crt > /dev/null
+
+    - name: 🔄 Restart Docker to apply CA certificate
+      run: |
+        sudo systemctl restart docker
+        echo "✅ Docker restarted with the new CA certificate"
+
+    - name: 🐳 Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: 🔑 Log in to Private Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ${{ secrets.DOCKER_REGISTRY_URL }}
+        username: ${{ secrets.DOCKER_REGISTRY_LOGIN }}
+        password: ${{ secrets.DOCKER_REGISTRY_PASSWORD }}
+
+    - name: 🏗 Build and Push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: .
+        push: true
+        tags: ${{ secrets.REGISTRY_URL }}/svaliava-water-site:latest
+
+    - name: ✅ Upload completed
+      run: echo "🎉 Image successfully uploaded to Private Registry!"
