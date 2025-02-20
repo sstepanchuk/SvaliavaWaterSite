@@ -1,4 +1,4 @@
-name: 🚀 Build/Push Docker Image to Private Registry
+name: 🚀 Stage CI
 
 on:
   push:
@@ -7,6 +7,7 @@ on:
 
 jobs:
   build-and-push:
+    enviropment: stage
     runs-on: ubuntu-latest
 
     steps:
