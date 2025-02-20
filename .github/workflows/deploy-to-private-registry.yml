@@ -17,18 +17,19 @@ jobs:
     - name: 🐳 Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: 📂 Add CA cert to Ubuntu root store and restart Docker
+    - name: 📂 Add CA certificate to Ubuntu root store and Docker config, then restart Docker
       run: |
-        # Додаємо CA сертифікат у систему
-        echo "${{ secrets.DOCKER_CA_CERT }}" | base64 -d | sudo tee /usr/local/share/ca-certificates/registry-ca.crt > /dev/null
+        # Decode and add CA certificate to the system root and Docker config
+        echo "${{ secrets.DOCKER_CA_CERT }}" | base64 -d | sudo tee /usr/local/share/ca-certificates/registry-ca.crt /etc/docker/certs.d/${{ secrets.DOCKER_REGISTRY_URL }}/ca.crt > /dev/null
         
-        # Оновлюємо root сертифікати
+        # Update system certificates
         sudo update-ca-certificates
         
-        # Перезапускаємо Docker для застосування нового CA
+        # Restart Docker to apply the new CA certificate
         sudo systemctl restart docker
         
-        echo "✅ CA сертифікат додано у root та Docker перезапущено"
+        echo "✅ CA certificate added to system root, Docker config, and Docker restarted."
+
 
 
     - name: 🔑 Log in to Private Registry
