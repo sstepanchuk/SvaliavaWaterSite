@@ -21,6 +21,7 @@ jobs:
       run: |
         sudo mkdir -p /etc/docker/certs.d/${{ secrets.DOCKER_REGISTRY_URL }}
         echo "${{ secrets.DOCKER_CA_CERT }}" | base64 -d | sudo tee /etc/docker/certs.d/${{ secrets.REGISTRY_URL }}/ca.crt > /dev/null
+        sudo cat /etc/docker/certs.d/${{ secrets.REGISTRY_URL }}/ca.crt
 
     - name: 🔄 Restart Docker to apply CA certificate
       run: |
