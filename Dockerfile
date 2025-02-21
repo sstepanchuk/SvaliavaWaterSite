@@ -28,7 +28,7 @@ RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/c
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/usr/local/cargo/git \
     --mount=type=cache,target=$SCCACHE_DIR,sharing=locked \
-    cargo leptos build --release --workspace -vv
+    cargo leptos build --release -vv
 
 # Runtime build
 FROM debian:bookworm-slim as runtime
