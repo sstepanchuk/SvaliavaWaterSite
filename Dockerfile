@@ -1,6 +1,6 @@
 
 #prepare caching
-FROM lukemathwalker/cargo-chef:latest-rust-slim-bookworm as chef
+FROM lukemathwalker/cargo-chef:latest-rust-bookworm as chef
 RUN rustup target add wasm32-unknown-unknown
 RUN cargo install sccache
 ENV RUSTC_WRAPPER=sccache SCCACHE_DIR=/sccache
