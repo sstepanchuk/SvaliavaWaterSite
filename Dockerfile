@@ -2,6 +2,8 @@
 #prepare caching
 FROM lukemathwalker/cargo-chef:latest-rust-slim-bookworm as chef
 RUN rustup target add wasm32-unknown-unknown
+RUN cargo install sccache
+ENV RUSTC_WRAPPER=sccache SCCACHE_DIR=/sccache
 WORKDIR /app
 
 FROM chef AS planner
@@ -13,15 +15,20 @@ RUN cargo chef prepare --recipe-path recipe.json
 FROM chef AS builder
 
 COPY --from=planner /app/ .
-RUN cargo chef cook --release --recipe-path recipe.json
-RUN cargo chef cook --release --target wasm32-unknown-unknown --recipe-path recipe.json
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/usr/local/cargo/git \
+    --mount=type=cache,target=$SCCACHE_DIR,sharing=locked \
+    cargo chef cook --release --recipe-path recipe.json
 
 RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-x86_64-unknown-linux-musl.tgz \
   && tar -xvf cargo-binstall-x86_64-unknown-linux-musl.tgz \
   && cp cargo-binstall /usr/local/cargo/bin \
   && cargo binstall cargo-leptos -y
 
-RUN cargo leptos build --release --workspace -vv
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/usr/local/cargo/git \
+    --mount=type=cache,target=$SCCACHE_DIR,sharing=locked \
+    cargo leptos build --release --workspace -vv
 
 # Runtime build
 FROM debian:bookworm-slim as runtime
