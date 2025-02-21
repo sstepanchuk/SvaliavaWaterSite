@@ -14,7 +14,7 @@ RUN cargo chef prepare --recipe-path recipe.json
 # dependency builder
 FROM chef AS builder
 
-COPY --from=planner /app/ .
+COPY --from=planner /app/recipe.json recipe.json
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/usr/local/cargo/git \
     --mount=type=cache,target=$SCCACHE_DIR,sharing=locked \
@@ -25,6 +25,7 @@ RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/c
   && cp cargo-binstall /usr/local/cargo/bin \
   && cargo binstall cargo-leptos -y
 
+COPY --from=planner /app/ .
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/usr/local/cargo/git \
     --mount=type=cache,target=$SCCACHE_DIR,sharing=locked \
