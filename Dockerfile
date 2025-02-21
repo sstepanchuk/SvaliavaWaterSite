@@ -1,25 +1,25 @@
 
 #prepare caching
 FROM lukemathwalker/cargo-chef:latest-rust-slim-bookworm as chef
+RUN rustup target add wasm32-unknown-unknown
 WORKDIR /app
 
 FROM chef AS planner
 
 COPY . .
-RUN cargo chef prepare --workspace --recipe-path recipe.json
+RUN cargo chef prepare --recipe-path recipe.json
 
 # dependency builder
 FROM chef AS builder
 
 COPY --from=planner /app/ .
 RUN cargo chef cook --release --recipe-path recipe.json
+RUN cargo chef cook --release --target wasm32-unknown-unknown --recipe-path recipe.json
 
 RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/cargo-binstall-x86_64-unknown-linux-musl.tgz \
   && tar -xvf cargo-binstall-x86_64-unknown-linux-musl.tgz \
   && cp cargo-binstall /usr/local/cargo/bin \
   && cargo binstall cargo-leptos -y
-
-RUN rustup target add wasm32-unknown-unknown
 
 RUN cargo leptos build --release --workspace -vv
 
