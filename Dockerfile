@@ -8,7 +8,7 @@ WORKDIR /app
 
 FROM chef AS planner
 
-COPY */Cargo.toml */*/Cargo.toml ./
+COPY Cargo.toml */Cargo.toml */*/Cargo.toml ./
 COPY Cargo.lock */Cargo.lock */*/Cargo.lock ./
 RUN cargo chef prepare --recipe-path recipe.json
 
