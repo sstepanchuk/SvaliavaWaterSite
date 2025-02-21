@@ -15,7 +15,7 @@ pub async fn get_text() -> Result<String, ServerFnError> {
     };
 
     Ok(
-        "TESTTT3333".to_string()
+        "qwewqeqweq".to_string()
     )
 }
 
