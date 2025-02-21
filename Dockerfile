@@ -9,9 +9,11 @@ WORKDIR /app
 
 FROM chef AS planner
 
-COPY --parents ./**/Cargo.toml .
-COPY --parents ./**/Cargo.toml .
-RUN cargo chef prepare --recipe-path recipe.json
+COPY . .
+RUN --mount=type=cache,target=/usr/local/cargo/registry \
+    --mount=type=cache,target=/usr/local/cargo/git \
+    --mount=type=cache,target=$SCCACHE_DIR,sharing=locked \
+    cargo chef prepare --recipe-path recipe.json
 
 # dependency builder
 FROM chef AS builder
