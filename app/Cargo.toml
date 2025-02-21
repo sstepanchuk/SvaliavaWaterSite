@@ -3,6 +3,8 @@ name = "app"
 version = "0.1.0"
 edition = "2021"
 
+[lib]
+
 [dependencies]
 #leptos
 leptos.workspace = true
