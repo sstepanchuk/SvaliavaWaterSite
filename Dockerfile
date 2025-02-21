@@ -9,8 +9,8 @@ WORKDIR /app
 
 FROM chef AS planner
 
-COPY --parents Cargo.toml */Cargo.toml */*/Cargo.toml .
-COPY --parents Cargo.lock */Cargo.lock */*/Cargo.lock .
+COPY --parents ./**/Cargo.toml .
+COPY --parents ./**/Cargo.toml .
 RUN cargo chef prepare --recipe-path recipe.json
 
 # dependency builder
