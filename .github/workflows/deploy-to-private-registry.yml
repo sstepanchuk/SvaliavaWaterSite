@@ -37,7 +37,7 @@ jobs:
     - name: 🐳 Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
       with:
-        config-inline: |
+        buildkitd-config-inline: |
           [registry."${{ secrets.DOCKER_REGISTRY_URL }}"]
             ca=["/usr/local/share/ca-certificates/registry-ca.crt"]
 
