@@ -8,7 +8,8 @@ WORKDIR /app
 
 FROM chef AS planner
 
-COPY . .
+COPY */Cargo.toml */*/Cargo.toml ./
+COPY Cargo.lock */Cargo.lock */*/Cargo.lock ./
 RUN cargo chef prepare --recipe-path recipe.json
 
 # dependency builder
@@ -25,7 +26,7 @@ RUN wget https://github.com/cargo-bins/cargo-binstall/releases/latest/download/c
   && cp cargo-binstall /usr/local/cargo/bin \
   && cargo binstall cargo-leptos -y
 
-COPY --from=planner /app/ .
+COPY . .
 RUN --mount=type=cache,target=/usr/local/cargo/registry \
     --mount=type=cache,target=/usr/local/cargo/git \
     --mount=type=cache,target=$SCCACHE_DIR,sharing=locked \
