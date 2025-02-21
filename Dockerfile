@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1-labs
 
 #prepare caching
 FROM lukemathwalker/cargo-chef:latest-rust-bookworm as chef
